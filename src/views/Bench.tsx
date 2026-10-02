@@ -7,7 +7,7 @@ import { recurringThreads, resurface, unfinished } from "../lib/discovery";
 import { daysSince } from "../lib/time";
 import { ArtifactCard, ArtifactRow } from "../components/ArtifactCard";
 import { QuickCapture } from "../components/QuickCapture";
-import { Emblem, SpectrumRule } from "../components/Emblem";
+import { Badge, BrandRule, Plank } from "../components/Brand";
 
 export function Bench() {
   const artifacts = useArtifacts();
@@ -35,7 +35,7 @@ export function Bench() {
   if (artifacts.length === 0) {
     return (
       <div className="page bench bench-empty">
-        <Emblem className="empty-emblem" />
+        <Badge className="empty-badge" />
         <p className="dateline">{today}</p>
         <h1 className="bench-title">Come in and mess around.</h1>
         <p className="lede">
@@ -63,11 +63,11 @@ export function Bench() {
           <h1 className="bench-title">Come in and mess around.</h1>
           <QuickCapture />
         </div>
-        <Emblem className="bench-emblem" />
+        <Badge className="bench-badge" />
       </header>
-      <SpectrumRule />
+      <BrandRule />
 
-      <section className="bench-section">
+      <section className="bench-section on-bench">
         <div className="section-head">
           <h2>On the bench</h2>
           <span className="section-note">{exploring.length ? `${exploring.length} being explored` : ""}</span>
@@ -83,6 +83,7 @@ export function Bench() {
             Nothing in progress. Open an artifact and set it to <em>Exploring</em> to put it here.
           </p>
         )}
+        <Plank />
       </section>
 
       <div className="bench-columns">

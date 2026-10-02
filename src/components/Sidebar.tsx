@@ -3,7 +3,7 @@ import { NavLink, useLocation, useNavigate, useSearchParams } from "react-router
 import { SHELVES } from "../shelves";
 import { exportAll, importAll, useArtifacts } from "../store/artifacts";
 import { randomPick } from "../lib/discovery";
-import { EmblemMark } from "./Emblem";
+import { Badge } from "./Brand";
 
 export function Sidebar() {
   const artifacts = useArtifacts();
@@ -77,10 +77,10 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <NavLink to="/" className="brand" end aria-label="DAKPluto Workbench, the bench">
-        <EmblemMark />
+        <Badge small className="brand-badge" />
         <span className="brand-words">
           <span className="brand-owner">
-            DAK<span className="brand-pluto">Pluto</span>
+            <span className="brand-dak">DAK</span>Pluto
           </span>
           <span className="brand-name">Workbench</span>
         </span>
