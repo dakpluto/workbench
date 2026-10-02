@@ -2,7 +2,7 @@
   // Cloudflare Workers config: serves the built app as static assets.
   // Unknown paths fall back to index.html so links to artifacts work.
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "dakpluto-workbench",
+  "name": "workbench",
   "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
