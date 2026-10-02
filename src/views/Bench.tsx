@@ -8,12 +8,14 @@ import { daysSince } from "../lib/time";
 import { ArtifactCard, ArtifactRow } from "../components/ArtifactCard";
 import { QuickCapture } from "../components/QuickCapture";
 import { Badge, BrandRule, Plank } from "../components/Brand";
+import { themeCopy, useTheme } from "../theme";
 
 export function Bench() {
   const artifacts = useArtifacts();
   const linkCounts = useLinkCounts();
   const [recentMode, setRecentMode] = useState<"touched" | "created">("touched");
   const [nonce, setNonce] = useState(0);
+  const copy = themeCopy(useTheme());
 
   const live = useMemo(() => (artifacts ?? []).filter((a) => !a.archivedAt), [artifacts]);
   const exploring = useMemo(
@@ -36,8 +38,11 @@ export function Bench() {
     return (
       <div className="page bench bench-empty">
         <Badge className="empty-badge" />
-        <p className="dateline">{today}</p>
-        <h1 className="bench-title">Come in and mess around.</h1>
+        <p className="dateline">
+          {today}
+          {copy.countdown && <span className="countdown">{copy.countdown}</span>}
+        </p>
+        <h1 className="bench-title">{copy.headline}</h1>
         <p className="lede">
           Everything here is an artifact: an idea, an experiment, a question, a tool, something you abandoned, something you
           can't name yet. Put one down to start.
@@ -59,8 +64,11 @@ export function Bench() {
     <div className="page bench">
       <header className="bench-head">
         <div className="bench-head-text">
-          <p className="dateline">{today}</p>
-          <h1 className="bench-title">Come in and mess around.</h1>
+          <p className="dateline">
+          {today}
+          {copy.countdown && <span className="countdown">{copy.countdown}</span>}
+        </p>
+          <h1 className="bench-title">{copy.headline}</h1>
           <QuickCapture />
         </div>
         <Badge className="bench-badge" />

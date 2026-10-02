@@ -4,6 +4,8 @@ import { SHELVES } from "../shelves";
 import { exportAll, importAll, useArtifacts } from "../store/artifacts";
 import { randomPick } from "../lib/discovery";
 import { Badge } from "./Brand";
+import { ThemeToggle } from "./Spooky";
+import { themeCopy, useTheme } from "../theme";
 
 export function Sidebar() {
   const artifacts = useArtifacts();
@@ -13,6 +15,7 @@ export function Sidebar() {
   const searchRef = useRef<HTMLInputElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [backupMsg, setBackupMsg] = useState("");
+  const copy = themeCopy(useTheme());
 
   const onEverything = location.pathname === "/shelf/everything";
   const [q, setQ] = useState(onEverything ? (params.get("q") ?? "") : "");
@@ -132,8 +135,9 @@ export function Sidebar() {
 
       <div className="side-foot">
         <button className="btn btn-surprise" onClick={surprise} disabled={!artifacts?.length}>
-          <span aria-hidden>⚄</span> Surprise me
+          <span aria-hidden>{copy.surpriseGlyph}</span> {copy.surprise}
         </button>
+        <ThemeToggle />
         <div className="backup">
           <button className="link-btn" onClick={download}>
             Export
