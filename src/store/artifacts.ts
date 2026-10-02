@@ -17,6 +17,19 @@ import {
  * filtering happens in memory. Revisit if that ever stops being true.
  */
 
+/**
+ * crypto.randomUUID only exists in secure contexts (https or localhost),
+ * so build a v4 UUID from getRandomValues when opened over a LAN address.
+ */
+function newId(): string {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+
 /* ---------- Reading ---------- */
 
 export function useArtifacts(): Artifact[] | undefined {
@@ -74,7 +87,7 @@ export async function createArtifact(input: NewArtifact): Promise<Artifact> {
     const seq = counter + 1;
     await db.meta.put({ key: "seq", value: seq });
     const artifact: Artifact = {
-      id: crypto.randomUUID(),
+      id: newId(),
       seq,
       type: DEFAULT_TYPE,
       summary: "",
@@ -123,7 +136,7 @@ export async function connect(fromId: ArtifactId, toId: ArtifactId, kind: LinkKi
   if (fromId === toId) return;
   const existing = await db.links.where("fromId").equals(fromId).filter((l) => l.toId === toId && l.kind === kind).first();
   if (existing) return;
-  await db.links.add({ id: crypto.randomUUID(), fromId, toId, kind, createdAt: Date.now() });
+  await db.links.add({ id: newId(), fromId, toId, kind, createdAt: Date.now() });
 }
 
 export async function disconnect(linkId: string): Promise<void> {
