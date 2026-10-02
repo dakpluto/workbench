@@ -24,3 +24,7 @@ npm run build    # static site in dist/
 
 - `/` focuses search. `#tag` in search filters by tag.
 - In the capture box: `idea: some thought #tag` sets type and tags. **Enter** adds it, **Ctrl+Enter** adds and opens it.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
