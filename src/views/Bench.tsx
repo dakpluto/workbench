@@ -7,6 +7,7 @@ import { recurringThreads, resurface, unfinished } from "../lib/discovery";
 import { daysSince } from "../lib/time";
 import { ArtifactCard, ArtifactRow } from "../components/ArtifactCard";
 import { QuickCapture } from "../components/QuickCapture";
+import { Emblem, SpectrumRule } from "../components/Emblem";
 
 export function Bench() {
   const artifacts = useArtifacts();
@@ -34,6 +35,7 @@ export function Bench() {
   if (artifacts.length === 0) {
     return (
       <div className="page bench bench-empty">
+        <Emblem className="empty-emblem" />
         <p className="dateline">{today}</p>
         <h1 className="bench-title">Come in and mess around.</h1>
         <p className="lede">
@@ -56,10 +58,14 @@ export function Bench() {
   return (
     <div className="page bench">
       <header className="bench-head">
-        <p className="dateline">{today}</p>
-        <h1 className="bench-title">Come in and mess around.</h1>
-        <QuickCapture />
+        <div className="bench-head-text">
+          <p className="dateline">{today}</p>
+          <h1 className="bench-title">Come in and mess around.</h1>
+          <QuickCapture />
+        </div>
+        <Emblem className="bench-emblem" />
       </header>
+      <SpectrumRule />
 
       <section className="bench-section">
         <div className="section-head">
@@ -69,7 +75,7 @@ export function Bench() {
         {exploring.length ? (
           <div className="card-scatter">
             {exploring.map((a) => (
-              <ArtifactCard key={a.id} artifact={a} links={linkCounts?.get(a.id)} tilted />
+              <ArtifactCard key={a.id} artifact={a} links={linkCounts?.get(a.id)} />
             ))}
           </div>
         ) : (

@@ -1,4 +1,4 @@
-# Workbench
+# DAKPluto Workbench
 
 A personal digital workshop: a place to collect ideas, experiments, questions, tools and half-finished things, and to rediscover them later.
 
@@ -18,6 +18,7 @@ npm run build    # static site in dist/
 - `src/store/`: the **only** code that touches persistence. Swap its internals to add sync or a server later; the UI shouldn't need to change.
 - `src/lib/discovery.ts`: the resurfacing heuristics (forgotten things, unfinished business, recurring tags). This is where smarter discovery goes.
 - `src/shelves.ts`: sidebar views are filters over the one collection. A new shelf is one entry.
+- `src/components/Emblem.tsx`: the logo emblem redrawn as SVG (original artwork in `docs/brand/`).
 - `src/views/`: the bench (landing), shelves (lists + search) and the artifact page (inline editing, status, connections).
 
 ## Shortcuts

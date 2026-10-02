@@ -5,6 +5,7 @@ import {
   markViewed,
   setArchived,
   updateArtifact,
+  updateArtifactNow,
   useArtifact,
   useArtifacts,
   type ArtifactPatch,
@@ -41,12 +42,20 @@ function useDraft(artifact: Artifact) {
   const [state, setState] = useState<"saved" | "pending">("saved");
   const pending = useRef<Partial<Record<TextField, string>>>({});
   const timer = useRef<number>(undefined);
+  // Latest stored record, for the synchronous save during unload.
+  const latest = useRef(artifact);
+  latest.current = artifact;
 
-  function flush() {
+  function takePending() {
     window.clearTimeout(timer.current);
     const patch = pending.current;
     pending.current = {};
-    if (Object.keys(patch).length) updateArtifact(artifact.id, patch).then(() => setState("saved"));
+    return Object.keys(patch).length ? patch : null;
+  }
+
+  function flush() {
+    const patch = takePending();
+    if (patch) updateArtifact(artifact.id, patch).then(() => setState("saved"));
   }
 
   function set(field: TextField, value: string) {
@@ -57,8 +66,22 @@ function useDraft(artifact: Artifact) {
     timer.current = window.setTimeout(flush, 500);
   }
 
-  // Save whatever is pending when leaving the page.
-  useEffect(() => flush, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Save whatever is pending when leaving: in-app navigation flushes normally;
+  // reloads, closed tabs and a phone backgrounding the browser save synchronously.
+  useEffect(() => {
+    const saveNow = () => {
+      const patch = takePending();
+      if (patch) updateArtifactNow(latest.current, patch);
+    };
+    const onHide = () => document.visibilityState === "hidden" && saveNow();
+    window.addEventListener("pagehide", saveNow);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("pagehide", saveNow);
+      document.removeEventListener("visibilitychange", onHide);
+      flush();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { draft, set, state, flush };
 }

@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate, useSearchParams } from "react-router
 import { SHELVES } from "../shelves";
 import { exportAll, importAll, useArtifacts } from "../store/artifacts";
 import { randomPick } from "../lib/discovery";
+import { EmblemMark } from "./Emblem";
 
 export function Sidebar() {
   const artifacts = useArtifacts();
@@ -75,13 +76,14 @@ export function Sidebar() {
 
   return (
     <aside className="sidebar">
-      <NavLink to="/" className="brand" end>
-        <svg viewBox="0 0 32 32" aria-hidden>
-          <circle cx="16" cy="16" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="16" cy="16" r="2.6" className="brand-core" />
-          <path d="M16 2v5M16 25v5M2 16h5M25 16h5" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-        <span>Workbench</span>
+      <NavLink to="/" className="brand" end aria-label="DAKPluto Workbench, the bench">
+        <EmblemMark />
+        <span className="brand-words">
+          <span className="brand-owner">
+            DAK<span className="brand-pluto">Pluto</span>
+          </span>
+          <span className="brand-name">Workbench</span>
+        </span>
       </NavLink>
 
       <label className="search">

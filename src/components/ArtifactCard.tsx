@@ -3,32 +3,18 @@ import { catalogNumber, touchedAt, type Artifact } from "../model/artifact";
 import { ago } from "../lib/time";
 import { StatusDot, Tags, TypeMark } from "./Marks";
 
-/** Stable per-artifact tilt so the bench looks set down by hand, not tiled. */
-function tilt(id: string): number {
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
-  return ((h % 100) / 100) * 1.4; // -1.4deg .. 1.4deg
-}
-
 export function ArtifactCard({
   artifact: a,
   links = 0,
-  tilted = false,
   note,
 }: {
   artifact: Artifact;
   links?: number;
-  tilted?: boolean;
   /** Optional line printed on the card, e.g. "untouched for 143 days". */
   note?: string;
 }) {
   return (
-    <Link
-      to={`/a/${a.id}`}
-      className="card"
-      data-status={a.status}
-      style={tilted ? ({ "--tilt": `${tilt(a.id)}deg` } as React.CSSProperties) : undefined}
-    >
+    <Link to={`/a/${a.id}`} className="card" data-status={a.status}>
       <div className="card-head">
         <span className="catalog">{catalogNumber(a)}</span>
         <TypeMark type={a.type} />

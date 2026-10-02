@@ -116,6 +116,21 @@ export async function updateArtifact(id: ArtifactId, patch: ArtifactPatch): Prom
   await db.artifacts.update(id, { ...clean, updatedAt: Date.now() });
 }
 
+/**
+ * Last-chance save while the page is unloading. Dexie opens transactions
+ * asynchronously, which the browser kills during unload, so this starts a
+ * native IndexedDB write synchronously instead. Needs the latest record.
+ */
+export function updateArtifactNow(current: Artifact, patch: ArtifactPatch): void {
+  const idb = db.isOpen() ? db.backendDB() : null;
+  const next = { ...current, ...patch, updatedAt: Date.now() };
+  if (!idb) {
+    void updateArtifact(current.id, patch);
+    return;
+  }
+  idb.transaction("artifacts", "readwrite").objectStore("artifacts").put(next);
+}
+
 /** Record a visit without counting it as an edit. */
 export async function markViewed(id: ArtifactId): Promise<void> {
   await db.artifacts.update(id, { viewedAt: Date.now() });
