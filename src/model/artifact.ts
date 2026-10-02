@@ -69,6 +69,7 @@ export const KNOWN_TYPES: TypeInfo[] = [
 export const DEFAULT_TYPE = "thing";
 
 export function typeInfo(type: string): TypeInfo {
+  if (typeof type !== "string" || !type) type = DEFAULT_TYPE;
   const known = KNOWN_TYPES.find((t) => t.key === type);
   if (known) return known;
   const label = type.charAt(0).toUpperCase() + type.slice(1);

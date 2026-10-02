@@ -17,6 +17,17 @@ export class WorkbenchDB extends Dexie {
       links: "id, fromId, toId",
       meta: "key",
     });
+    // v0.1 quick capture could save artifacts with no type; give them the default.
+    this.version(2).upgrade((tx) =>
+      tx
+        .table("artifacts")
+        .toCollection()
+        .modify((a: Partial<Artifact>) => {
+          if (typeof a.type !== "string" || !a.type) a.type = "thing";
+          if (!Array.isArray(a.tags)) a.tags = [];
+          if (typeof a.status !== "string") a.status = "seed";
+        }),
+    );
   }
 }
 

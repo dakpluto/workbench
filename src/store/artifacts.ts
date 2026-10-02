@@ -98,7 +98,8 @@ export async function createArtifact(input: NewArtifact): Promise<Artifact> {
       viewedAt: now,
       archivedAt: null,
       metadata: {},
-      ...input,
+      // Drop undefined fields so they can't clobber the defaults above.
+      ...Object.fromEntries(Object.entries(input).filter(([, v]) => v !== undefined)),
       title: input.title.trim() || "Untitled thing",
       tags: [...new Set((input.tags ?? []).map(normalizeTag).filter(Boolean))],
     };
